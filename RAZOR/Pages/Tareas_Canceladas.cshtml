@@ -1,14 +1,14 @@
 ﻿@page
-@model RAZOR.Pages.Tareas_ConcluidasModel
+@model RAZOR.Pages.Tareas_CanceladasModel
 @{
-    ViewData["Title"] = "Tareas Concluidas";
+    ViewData["Title"] = "Tareas Canceladas";
 }
 
 <div class="container mt-4">
-    <h1 class="mb-4 text-success">✅ Tareas Concluidas</h1>
+    <h1 class="mb-4 text-danger">❌ Tareas Canceladas</h1>
 
     <table class="table table-bordered table-striped">
-        <thead class="table-success">
+        <thead class="table-danger">
             <tr>
                 <th>Nombre</th>
                 <th>Fecha de Vencimiento</th>
@@ -18,18 +18,18 @@
         </thead>
         <tbody>
             <tr>
-                <td>Enviar reporte mensual</td>
-                <td>10/08/2025</td>
-                <td><span class="badge bg-success">Completada</span></td>
+                <td>Visita al cliente</td>
+                <td>08/08/2025</td>
+                <td><span class="badge bg-danger">Cancelada</span></td>
                 <td>
                     <button class="btn btn-primary btn-sm">✏ Editar</button>
                     <button class="btn btn-danger btn-sm">🗑 Eliminar</button>
                 </td>
             </tr>
             <tr>
-                <td>Pago de servicios</td>
-                <td>12/08/2025</td>
-                <td><span class="badge bg-success">Completada</span></td>
+                <td>Revisión de contrato</td>
+                <td>09/08/2025</td>
+                <td><span class="badge bg-danger">Cancelada</span></td>
                 <td>
                     <button class="btn btn-primary btn-sm">✏ Editar</button>
                     <button class="btn btn-danger btn-sm">🗑 Eliminar</button>

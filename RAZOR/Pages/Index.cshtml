@@ -1,12 +1,48 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Lista de Tareas";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Tareas Asignadas</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">📋 Lista de Tareas</h1>
 
-
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Nombre</th>
+                <th>Fecha de Vencimiento</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tarea in Model.Tareas)
+            {
+                <tr>
+                    <td>@tarea.nombreTarea</td>
+                    <td>@tarea.fechaVencimiento</td>
+                    <td>
+                        @if (tarea.estado == "Pendiente")
+                        {
+                            <span class="badge bg-warning">Pendiente</span>
+                        }
+                        else if (tarea.estado == "Finalizado")
+                        {
+                            <span class="badge bg-success">Completada</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-info">@tarea.estado</span>
+                        }
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm">✔ Completar</button>
+                        <button class="btn btn-primary btn-sm">✏ Editar</button>
+                        <button class="btn btn-danger btn-sm">🗑 Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
