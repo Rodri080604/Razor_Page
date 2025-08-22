@@ -42,3 +42,20 @@ body {
     .sidebar.collapsed {
         margin-left: -220px;
     }
+
+
+    /*Style del index*/
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.grid-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+

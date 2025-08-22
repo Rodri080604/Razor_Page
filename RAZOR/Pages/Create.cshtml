@@ -1,0 +1,27 @@
+﻿@page
+@model RAZOR.Pages.CreateModel
+@{
+}
+<h2>Crear Nueva Tarea</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="NuevaTarea.nombreTarea">Nombre de la Tarea</label>
+        <input asp-for="NuevaTarea.nombreTarea" class="form-control" />
+        <span asp-validation-for="NuevaTarea.nombreTarea" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NuevaTarea.fechaVencimiento">Fecha de Vencimiento</label>
+        <input asp-for="NuevaTarea.fechaVencimiento" class="form-control" type="date" />
+        <span asp-validation-for="NuevaTarea.fechaVencimiento" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NuevaTarea.estado">Estado</label>
+        <select asp-for="NuevaTarea.estado" class="form-control">
+            <option value="Pendiente">Pendiente</option>
+        </select>
+        <span asp-validation-for="NuevaTarea.estado" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+</form>

@@ -1,0 +1,30 @@
+﻿@page
+@model RAZOR.Pages.EdithModel
+@{
+}
+<h2>Editar Tarea</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="TareaActual.idTarea" />
+    <div class="form-group">
+        <label asp-for="TareaActual.nombreTarea">Nombre de la Tarea</label>
+        <input asp-for="TareaActual.nombreTarea" class="form-control" />
+        <span asp-validation-for="TareaActual.nombreTarea" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TareaActual.fechaVencimiento">Fecha de Vencimiento</label>
+        <input asp-for="TareaActual.fechaVencimiento" class="form-control" type="date" />
+        <span asp-validation-for="TareaActual.fechaVencimiento" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TareaActual.estado">Estado</label>
+        <select asp-for="TareaActual.estado" class="form-control">
+            <option value="Pendiente">Pendiente</option>
+            <option value="En curso">En curso</option>
+            <option value="Finalizado">Finalizado</option>
+        </select>
+        <span asp-validation-for="TareaActual.estado" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+</form>
