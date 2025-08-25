@@ -43,8 +43,7 @@ body {
         margin-left: -220px;
     }
 
-
-    /*Style del index*/
+    /*Ascpecto del index*/
 .grid-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -57,5 +56,31 @@ body {
     border: 1px solid #ddd;
     text-align: center;
 }
+
+.actions-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+}
+
+    .actions-container .btn {
+        flex: 1;
+        min-width: 100px;
+        text-align: center;
+        white-space: nowrap;
+    }
+.actions-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px; /* Espacio entre botones */
+    flex-wrap: nowrap; /* Evita que se apilen */
+}
+
+    .actions-container button, .actions-container a {
+        margin: 0; /* Elimina márgenes para alinear horizontalmente */
+        white-space: nowrap; /* Evita que el texto de los botones se rompa */
+    }
 
 

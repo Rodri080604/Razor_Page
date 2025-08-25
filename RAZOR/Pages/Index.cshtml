@@ -40,38 +40,48 @@
     else
     {
         <div class="grid-container">
-            <div class="grid-item"><b>Nombre Tarea</b></div>
-            <div class="grid-item"><b>Fecha Vencimiento</b></div>
-            <div class="grid-item"><b>Estado</b></div>
-            <div class="grid-item"><b>Acciones</b></div>
+    <div class="grid-item"><b>Nombre Tarea</b></div>
+    <div class="grid-item"><b>Fecha Vencimiento</b></div>
+    <div class="grid-item"><b>Estado</b></div>
+    <div class="grid-item"><b>Acciones</b></div>
 
-            @foreach (var tarea in Model.Tareas)
-            {
-                <div class="grid-item">@tarea.nombreTarea</div>
-                <div class="grid-item">@tarea.fechaVencimiento</div>
-                <div class="grid-item">
-                    <span class="badge @(tarea.estado switch {
-                        "Pendiente" => "bg-warning text-dark",
-                        "En curso" => "bg-info",
-                        "Finalizado" => "bg-success",
-                        _ => "bg-secondary"
-                    })">
-                        @tarea.estado
-                    </span>
-                </div>
-                <div class="grid-item">
-                    @if (tarea.estado == "Pendiente" || tarea.estado == "En curso")
-                    {
-                        <form method="post" asp-page-handler="Completar" style="display:inline;">
-                            <input type="hidden" name="id" value="@tarea.idTarea" />
-                            <button type="submit" class="btn btn-success btn-sm">✔ Completar</button>
-                        </form>
-                    }
-                    <a asp-page="Edith" asp-route-id="@tarea.idTarea" class="btn btn-primary btn-sm">✏ Editar</a>
-                    <a asp-page="Delete" asp-route-id="@tarea.idTarea" class="btn btn-danger btn-sm">🗑 Eliminar</a>
-                </div>
-            }
+    @foreach (var tarea in Model.Tareas)
+    {
+        <div class="grid-item">@tarea.nombreTarea</div>
+        <div class="grid-item">@tarea.fechaVencimiento</div>
+        <div class="grid-item">
+            <span class="badge @(tarea.estado switch {
+                "Pendiente" => "bg-warning text-dark",
+                "En curso" => "bg-info",
+                "Finalizado" => "bg-success",
+                _ => "bg-secondary"
+            })">
+                @tarea.estado
+            </span>
         </div>
+        <div class="grid-item actions-container">
+            @if (tarea.estado == "Pendiente" || tarea.estado == "En curso")
+            {
+                <form method="post" asp-page-handler="Completar" style="display:inline;">
+                    <input type="hidden" name="id" value="@tarea.idTarea" />
+                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('¿Está seguro de completar esta tarea?')">✔ Completar</button>
+                </form>
+            }
+            @if (tarea.estado == "Pendiente" || tarea.estado == "En curso")
+            {
+                <form method="post" asp-page-handler="EnCurso" style="display:inline;">
+                    <input type="hidden" name="id" value="@tarea.idTarea" />
+                    <button type="submit" class="btn btn-info btn-sm" onclick="return confirm('¿Está seguro de cambiar esta tarea a En curso?')">⏳ En curso</button>
+                </form>
+            }
+            <a asp-page="Edit" asp-route-id="@tarea.idTarea" class="btn btn-primary btn-sm">✏ Editar</a>
+            <form method="post" asp-page-handler="Cancelar" style="display:inline;">
+                <input type="hidden" name="id" value="@tarea.idTarea" />
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de cancelar esta tarea?')">❌ Cancelar</button>
+            </form>
+        </div>
+    }
+</div>/*Esto todavia*/
 
         <!-- Información de paginación -->
         <p class="mt-3">
