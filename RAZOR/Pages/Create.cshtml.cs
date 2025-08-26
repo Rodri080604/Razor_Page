@@ -14,7 +14,7 @@ namespace RAZOR.Pages
 
         public void OnGet()
         {
-            // Vista vacía para el formulario
+            
         }
 
         public IActionResult OnPost()
@@ -25,9 +25,13 @@ namespace RAZOR.Pages
             }
 
             var tareas = LeerTareas();
-            NuevaTarea.idTarea = Guid.NewGuid().ToString().Substring(0, 8); // Generar ID único
+            NuevaTarea.idTarea = tareas.Count > 0 ? tareas.Max(t => t.idTarea) + 1 : 1;
+
+
+
             tareas.Add(NuevaTarea);
             GuardarTareas(tareas);
+
 
             return RedirectToPage("Index");
         }

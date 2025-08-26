@@ -3,38 +3,92 @@
 @{
     ViewData["Title"] = "Tareas Canceladas";
 }
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
 <div class="container mt-4">
-    <h1 class="mb-4 text-danger">❌ Tareas Canceladas</h1>
+    <h2 class="mb-3 text-danger">❌ Tareas Canceladas</h2>
 
-    <table class="table table-bordered table-striped">
-        <thead class="table-danger">
-            <tr>
-                <th>Nombre</th>
-                <th>Fecha de Vencimiento</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Visita al cliente</td>
-                <td>08/08/2025</td>
-                <td><span class="badge bg-danger">Cancelada</span></td>
-                <td>
-                    <button class="btn btn-primary btn-sm">✏ Editar</button>
-                    <button class="btn btn-danger btn-sm">🗑 Eliminar</button>
-                </td>
-            </tr>
-            <tr>
-                <td>Revisión de contrato</td>
-                <td>09/08/2025</td>
-                <td><span class="badge bg-danger">Cancelada</span></td>
-                <td>
-                    <button class="btn btn-primary btn-sm">✏ Editar</button>
-                    <button class="btn btn-danger btn-sm">🗑 Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    
+    <form method="get" class="mb-3 row g-2">
+        <div class="col-auto">
+            <label for="tamanoPagina" class="col-form-label">Mostrar:</label>
+        </div>
+        <div class="col-auto">
+            <input type="number" id="tamanoPagina" name="tamanoPagina" class="form-control"
+                   min="1" max="@Model.TotalTareas" value="@Model.TamanoPagina"
+                   onchange="this.form.submit()" />
+        </div>
+        <div class="col-auto">
+            <span class="col-form-label">tareas por página</span>
+        </div>
+        <input type="hidden" name="pagina" value="@Model.PaginaActual" />
+    </form>
+
+    
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    
+    @if (!Model.Tareas.Any())
+    {
+        <p class="alert alert-warning">No hay tareas canceladas disponibles.</p>
+    }
+    else
+    {
+        <div class="grid-container">
+            <div class="grid-item"><b>Nombre Tarea</b></div>
+            <div class="grid-item"><b>Fecha Vencimiento</b></div>
+            <div class="grid-item"><b>Estado</b></div>
+            <div class="grid-item"><b>Acciones</b></div>
+
+            @foreach (var tarea in Model.Tareas)
+            {
+                <div class="grid-item">@tarea.nombreTarea</div>
+                <div class="grid-item">@tarea.fechaVencimiento</div>
+                <div class="grid-item">
+                    <span class="badge bg-danger">@tarea.estado</span>
+                </div>
+                <div class="grid-item">
+                    <form method="post" asp-page-handler="Reactivar" style="display:inline;">
+                        <input type="hidden" name="id" value="@tarea.idTarea" />
+                        <button type="submit" class="btn btn-warning btn-sm"
+                                onclick="return confirm('¿Está seguro de reactivar esta tarea y ponerla como Pendiente?')">
+                            🔄 Reactivar
+                        </button>
+                    </form>
+
+                </div>
+            }
+        </div>
+
+
+        
+        <p class="mt-3">
+            Mostrando @Model.Tareas.Count de @Model.TotalTareas tareas (Página @Model.PaginaActual de @Model.TotalPaginas)
+        </p>
+
+        
+
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.PaginaActual == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-page="./Tareas_Canceladas" asp-route-pagina="@(Model.PaginaActual - 1)" asp-route-tamanoPagina="@Model.TamanoPagina">Anterior</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPaginas; i++)
+                {
+                    <li class="page-item @(i == Model.PaginaActual ? "active" : "")">
+                        <a class="page-link" asp-page="./Tareas_Canceladas" asp-route-pagina="@i" asp-route-tamanoPagina="@Model.TamanoPagina">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.PaginaActual == Model.TotalPaginas ? "disabled" : "")">
+                    <a class="page-link" asp-page="./Tareas_Canceladas" asp-route-pagina="@(Model.PaginaActual + 1)" asp-route-tamanoPagina="@Model.TamanoPagina">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+    }
 </div>
+
+}

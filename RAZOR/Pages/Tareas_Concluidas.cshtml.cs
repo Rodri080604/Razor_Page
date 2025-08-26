@@ -12,7 +12,7 @@ namespace RAZOR.Pages
         public int TotalPaginas { get; set; }
         public int TamanoPagina { get; set; } = 5;
         public int TotalTareas { get; set; }
-        private readonly ILogger<Tareas_ConcluidasModel> _logger; // Corregido el tipo de ILogger
+        private readonly ILogger<Tareas_ConcluidasModel> _logger; 
         private readonly string jsonFilePath;
 
         public Tareas_ConcluidasModel(ILogger<Tareas_ConcluidasModel> logger)
@@ -27,9 +27,9 @@ namespace RAZOR.Pages
             {
                 var todasLasTareas = LeerTareas();
 
-                // Filtrar tareas con estado "Finalizado"
+                
                 var tareasFiltradas = todasLasTareas
-                    .Where(t => t.estado == "Finalizado") // Corregido el filtro
+                    .Where(t => t.estado == "Finalizado") 
                     .ToList();
 
                 TotalTareas = tareasFiltradas.Count;
@@ -55,6 +55,33 @@ namespace RAZOR.Pages
                 _logger.LogError($"Error en OnGet: {ex.Message}");
             }
         }
+        public IActionResult OnPostHabilitar(int id)
+        {
+            try
+            {
+                var tareas = LeerTareas();
+                var tarea = tareas.FirstOrDefault(t => t.idTarea == id);
+
+                if (tarea != null && tarea.estado == "Finalizado")
+                {
+                    tarea.estado = "Pendiente"; 
+                    GuardarTareas(tareas);
+                    _logger.LogInformation($"Tarea con ID {id} reactivada a Pendiente");
+                }
+                else
+                {
+                    TempData["Error"] = "No se encontró la tarea o no es válida para reactivar.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error en OnPostHabilitar: {ex.Message}");
+                TempData["Error"] = "Ocurrió un error al reactivar la tarea.";
+            }
+
+            return RedirectToPage(); 
+        }
+
 
         private List<Tarea> LeerTareas()
         {

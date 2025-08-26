@@ -12,7 +12,7 @@ namespace RAZOR.Pages
         [BindProperty]
         public Tarea TareaActual { get; set; }
 
-        public IActionResult OnGet(string id)
+        public IActionResult OnGet(int id)
         {
             var tareas = LeerTareas();
             TareaActual = tareas.FirstOrDefault(t => t.idTarea == id);
@@ -37,10 +37,11 @@ namespace RAZOR.Pages
                 return NotFound();
             }
 
-            // Actualizar campos
+            
             tareaExistente.nombreTarea = TareaActual.nombreTarea;
             tareaExistente.fechaVencimiento = TareaActual.fechaVencimiento;
-            tareaExistente.estado = TareaActual.estado;
+            
+
 
             GuardarTareas(tareas);
 

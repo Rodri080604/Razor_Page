@@ -12,7 +12,7 @@ namespace RAZOR.Pages
         public List<Tarea> Tareas { get; set; } = new();
         public int PaginaActual { get; set; }
         public int TotalPaginas { get; set; }
-        public int TamanoPagina { get; set; } = 5; // Consistente con el valor predeterminado
+        public int TamanoPagina { get; set; } = 5; 
         public int TotalTareas { get; set; }
         private readonly ILogger<IndexModel> _logger;
         private readonly string jsonFilePath;
@@ -57,12 +57,12 @@ namespace RAZOR.Pages
                 _logger.LogError($"Error en OnGet: {ex.Message}");
             }
         }
-
-        public IActionResult OnPostCompletar(string id)
+        /*------------ Completar o Finalizar tareas------------------------*/
+        public IActionResult OnPostCompletar(int id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id <= 0)
             {
-                _logger.LogWarning("ID de tarea no proporcionado en OnPostCompletar");
+                _logger.LogWarning("ID de tarea no válido en OnPostCompletar");
                 TempData["Error"] = "ID de tarea inválido.";
                 return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
             }
@@ -75,6 +75,7 @@ namespace RAZOR.Pages
                 TempData["Error"] = "Tarea no encontrada.";
                 return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
             }
+
             if (tarea.estado == "Finalizado")
             {
                 TempData["Error"] = "La tarea ya está finalizada y no se puede completar nuevamente.";
@@ -89,6 +90,81 @@ namespace RAZOR.Pages
 
             return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
         }
+        /*------------ En curso tareas------------------------*/
+        public IActionResult OnPostEnCurso(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("ID de tarea no válido en OnPostEnCurso");
+                TempData["Error"] = "ID de tarea inválido.";
+                return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+            }
+
+            var tareas = LeerTareas();
+            var tarea = tareas.FirstOrDefault(t => t.idTarea == id);
+            if (tarea == null)
+            {
+                _logger.LogWarning($"Tarea con ID {id} no encontrada en OnPostEnCurso");
+                TempData["Error"] = "Tarea no encontrada.";
+                return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+            }
+
+            if (tarea.estado == "Finalizado" || tarea.estado == "Cancelado")
+            {
+                TempData["Error"] = "No se puede mover a 'En curso' una tarea finalizada o cancelada.";
+                _logger.LogWarning($"Intento inválido de poner en curso tarea con ID {id}");
+                return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+            }
+
+            tarea.estado = "En curso";
+            GuardarTareas(tareas);
+            TempData["Success"] = "La tarea fue marcada como 'En curso'.";
+            _logger.LogInformation($"Tarea con ID {id} marcada como En curso");
+
+            return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+        }
+
+        /*------------ Cancelar tareas------------------------*/
+        public IActionResult OnPostCancelar(int id)
+        {
+            if (id <= 0)
+            {
+                _logger.LogWarning("ID de tarea no válido en OnPostCancelar");
+                TempData["Error"] = "ID de tarea inválido.";
+                return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+            }
+
+            var tareas = LeerTareas();
+            var tarea = tareas.FirstOrDefault(t => t.idTarea == id);
+            if (tarea == null)
+            {
+                _logger.LogWarning($"Tarea con ID {id} no encontrada en OnPostCancelar");
+                TempData["Error"] = "Tarea no encontrada.";
+                return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+            }
+
+            if (tarea.estado == "Finalizado")
+            {
+                TempData["Error"] = "No se puede cancelar una tarea que ya fue finalizada.";
+                _logger.LogWarning($"Intento inválido de cancelar tarea finalizada con ID {id}");
+                return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+            }
+
+            if (tarea.estado == "Cancelado")
+            {
+                TempData["Error"] = "La tarea ya está cancelada.";
+                _logger.LogWarning($"Intento de cancelar tarea ya cancelada con ID {id}");
+                return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+            }
+
+            tarea.estado = "Cancelado";
+            GuardarTareas(tareas);
+            TempData["Success"] = "La tarea fue marcada como Cancelada.";
+            _logger.LogInformation($"Tarea con ID {id} marcada como Cancelada");
+
+            return RedirectToPage("Index", new { pagina = PaginaActual, tamanoPagina = TamanoPagina });
+        }
+
 
         private List<Tarea> LeerTareas()
         {
